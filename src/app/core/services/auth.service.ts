@@ -85,4 +85,10 @@ export class AuthService {
   isAuthenticated(): boolean {
     return !!this.getToken();
   }
+
+  refreshToken(): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/refresh`, {}).pipe(
+      tap(response => this.handleAuthResponse(response))
+    );
+  }
 }

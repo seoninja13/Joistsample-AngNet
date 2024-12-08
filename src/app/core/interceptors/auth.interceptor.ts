@@ -10,6 +10,10 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from '../services/auth.service';
 
+interface RefreshTokenResponse {
+  token: string;
+}
+
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private isRefreshing = false;
@@ -49,7 +53,7 @@ export class AuthInterceptor implements HttpInterceptor {
       this.isRefreshing = true;
 
       return this.authService.refreshToken().pipe(
-        switchMap(response => {
+        switchMap((response: RefreshTokenResponse) => {
           this.isRefreshing = false;
           return next.handle(this.addToken(request, response.token));
         }),
